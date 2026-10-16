@@ -36,3 +36,30 @@ const form = document.querySelector('#contact-form'); if (form) { form.addEventL
       window.setTimeout(function () { window.location.href = destination.href }, 260);
    });
 })();
+
+
+document.getElementById('contact-form').addEventListener('submit', function (event) {
+   event.preventDefault(); // Page refresh hone se rokay ga
+
+   // Button ka text change kar sakte hain loading dikhane ke liye (Optional)
+   const submitBtn = this.querySelector('button[type="submit"]');
+   const originalText = submitBtn.innerText;
+   submitBtn.innerText = "Sending...";
+   submitBtn.disabled = true;
+
+   // EmailJS se email bhejna (Apni Service ID aur Template ID yahan dalein)
+   emailjs.sendForm('service_qxkkiic', 'template_5y3m78p', this)
+      .then(() => {
+         document.getElementById('form-status').innerText = "Message sent successfully!";
+         document.getElementById('form-status').style.color = "green";
+         this.reset(); // Form clear kar dega
+         submitBtn.innerText = originalText;
+         submitBtn.disabled = false;
+      }, (error) => {
+         document.getElementById('form-status').innerText = "Failed to send message. Please try again.";
+         document.getElementById('form-status').style.color = "red";
+         console.log('FAILED...', error);
+         submitBtn.innerText = originalText;
+         submitBtn.disabled = false;
+      });
+});

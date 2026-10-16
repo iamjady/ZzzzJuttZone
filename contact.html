@@ -72,13 +72,12 @@
                     <div class="field"><label for="message">Tell us about your project *</label><textarea id="message"
                             name="message" required
                             placeholder="Your goals, timeline, and any useful details..."></textarea></div><button
-                        class="btn" type="submit">Prepare email ↗</button>
-                    <p class="form-note">This form opens your device’s email app; it does not store or submit data to a
-                        server.</p>
+                        class="btn" type="submit">SUBMIT ↗</button>
                     <div class="notice" id="form-status" role="status"></div>
                 </form>
             </div>
         </section>
+
         <section class="section" style="padding-top:0">
             <div class="wrap">
                 <div class="eyebrow">Frequently asked</div>
@@ -142,6 +141,15 @@
             </div>
     </footer>
     <script src="script.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            emailjs.init({
+                publicKey: "soqociZpnSL7jqumd",
+            });
+        })();
+    </script>
 </body>
 
 </html>
