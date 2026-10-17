@@ -88,11 +88,21 @@ if (form) {
         'service_qxkkiic',
         'template_5y3m78p',
         form
+
       ).then(() => {
         if (status) {
-          status.textContent = 'Message sent successfully!';
-          status.style.color = 'green';
+          status.innerHTML = `
+      <div class="contact-success">
+        <div class="contact-success-icon">✓</div>
+        <h3>Thank You for Reaching Out!</h3>
+        <p>Your message has been sent successfully.</p>
+        <p>We appreciate your interest in Zzzzjutt Zone. Our team will review your inquiry and get back to you as soon as possible.</p>
+      </div>
+    `;
+          status.classList.add('show');
+          status.style.color = '#166534';
         }
+
 
         form.reset();
       }).catch(error => {
@@ -142,6 +152,10 @@ if (form) {
       subject + '&body=' + body;
   });
 }
+
+
+// contact massage
+
 
 
 /* =========================
