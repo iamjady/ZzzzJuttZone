@@ -26,24 +26,29 @@ if (menuButton && nav) {
 /* =========================
    PORTFOLIO FILTERS
 ========================= */
-document.querySelectorAll('[data-filter]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-filter]').forEach(b => {
-      b.classList.remove('active');
-    });
+const workFilterButtons = document.querySelectorAll('.work-filter-options [data-filter]');
+const workCards = document.querySelectorAll('.professional-design-grid .project-card[data-category]');
 
-    btn.classList.add('active');
+workFilterButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    workFilterButtons.forEach(button => {
+      button.classList.toggle('active', button === btn);
+      button.setAttribute('aria-pressed', button === btn ? 'true' : 'false');
+    });
 
     const filter = btn.dataset.filter;
-
-    document.querySelectorAll('[data-category]').forEach(card => {
-      card.hidden =
-        filter !== 'all' &&
-        !card.dataset.category.split(' ').includes(filter);
+    workCards.forEach(card => {
+      const categories = (card.dataset.category || '').split(/\\s+/).filter(Boolean);
+      card.hidden = filter !== 'all' && !categories.includes(filter);
     });
+
+    const filterMenu = btn.closest('.work-filter-menu');
+    if (filterMenu) filterMenu.open = false;
+
+    const triggerText = document.querySelector('.work-filter-trigger [data-filter-label]');
+    if (triggerText) triggerText.textContent = btn.childNodes[0].textContent.trim();
   });
 });
-
 
 /* =========================
    FOOTER YEAR
@@ -261,4 +266,58 @@ if (form) {
       window.location.href = destination.href;
     }, 800);
   });
+})();
+
+
+/* =========================
+   FIRST-OPEN LOADING SCREEN
+   Shown once per browser tab/session, not during page-to-page navigation.
+========================= */
+(() => {
+  const sessionKey = 'zzzzjutt-zone-loader-shown';
+  try {
+    if (sessionStorage.getItem(sessionKey)) return;
+    sessionStorage.setItem(sessionKey, '1');
+  } catch (error) {
+    // If storage is unavailable, skip the loader rather than risk showing it on every page.
+    return;
+  }
+
+  const loader = document.createElement('div');
+  loader.id = 'zz-first-loader';
+  loader.setAttribute('role', 'status');
+  loader.setAttribute('aria-label', 'Loading Zzzzjutt Zone');
+  loader.innerHTML = `
+    <div class="zz-loader-grain" aria-hidden="true"></div>
+    <div class="zz-loader-inner">
+      <div class="zz-loader-kicker"><span></span> INDEPENDENT CREATIVE STUDIO <span></span></div>
+      <div class="zz-loader-logo-wrap">
+        <span class="zz-loader-orbit zz-loader-orbit--one" aria-hidden="true"></span>
+        <span class="zz-loader-orbit zz-loader-orbit--two" aria-hidden="true"></span>
+        <img class="zz-loader-logo" src="Assets/Branding%20and%20designs/loading-logo.png" alt="">
+      </div>
+      <p class="zz-loader-name">ZZZZJUTT <span>ZONE</span></p>
+      <p class="zz-loader-tagline">Design with purpose</p>
+      <div class="zz-loader-bottom">
+        <span>CREATIVITY · STRATEGY · IMPACT</span>
+        <span class="zz-loader-track" aria-hidden="true"><span class="zz-loader-progress"></span></span>
+        <span class="zz-loader-caption">Preparing your experience</span>
+      </div>
+    </div>`;
+  document.body.appendChild(loader);
+
+  const dismiss = () => {
+    window.setTimeout(() => {
+      loader.classList.add('zz-loader-out');
+      window.setTimeout(() => loader.remove(), 700);
+    }, 3200);
+  };
+
+  if (document.readyState === 'complete') {
+    dismiss();
+  } else {
+    window.addEventListener('load', dismiss, { once: true });
+    // Safety fallback if an external asset delays the load event.
+    window.setTimeout(dismiss, 5000);
+  }
 })();
